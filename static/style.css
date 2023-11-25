@@ -1,0 +1,103 @@
+/* General styles */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.login-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 40%;
+  height: 62%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 50%;
+  max-width: 60%;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.camera-icon {
+  margin-right: -36px;
+  color: #007bff;
+  cursor: pointer;
+  padding-left: 1%;
+}
+
+.input-group {
+  position: relative;
+}
+
+.camera-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+}
+.lipcamera img{
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+#password {
+  padding-left: 30px;
+}
+
+/* Responsive styles */
+
+/* Adjustments for smaller screens */
+@media screen and (max-width: 600px) {
+  .login-form {
+    max-width: 80%;
+  }
+}

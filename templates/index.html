@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Example: using Font Awesome for the camera icon -->
+</head>
+
+<body>
+    <div class="login-container">
+        <form class="login-form" action="process_login.php" method="POST">
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="camera-btn">
+                    <input type="password" id="password" name="password" required>
+                    <i class="lipcamera" onclick="enableImageInput()">
+                        <img src="/static/image/lips (1).png" alt="camera">
+                    </i>
+                </div>
+
+            </div>
+
+            <button onclick="" type="submit">SignUp</button>
+        </form>
+    </div>
+
+    <!-- Your HTML content -->
+    <script>
+        function enableImageInput() {
+            document.getElementById("password").disabled = true;
+            fetch('/signup')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // Fixed: added parenthesis here
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    const Similarity_score = data.average_similarity;
+                    if (Similarity_score>=85){
+                        alert("Success! Similarity score: " + Similarity_score);
+                    }
+                    else{
+                        alert("Login restricted!!! Similarity score: " + Similarity_score);
+                    }
+                })  
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function signupdate() {
+            fetch('/signup')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // Fixed: added parenthesis here
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    const Similarity_score = data.average_similarity;
+                    if (Similarity_score>="85%"){
+                        alert("Success! Similarity score: " + Similarity_score);
+                    }
+                    else{
+                        alert("Login restricted!!! Similarity score: " + Similarity_score);
+                    }
+                    
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+        
+    </script>
+</body>
+
+</html>
