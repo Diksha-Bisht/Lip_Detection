@@ -1,2 +1,0 @@
-Mean Distance: 29.59724964407404
-Variance in Distance: 265.05544508530653
