@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="static/style.css">
     <!-- Example: using Font Awesome for the camera icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="login-container" id="login-container">
         <form class="login-form" action="process_login.php" method="POST">
             <h2>Login</h2>
             <div class="input-group">
@@ -24,15 +26,70 @@
                         <img src="/static/image/lips (1).png" alt="camera">
                     </i>
                 </div>
-
             </div>
-
             <button onclick="" type="submit">SignUp</button>
+            <button class="signupbtn" onclick="Signup()"> New? SignUp Here </button>
+        </form>
+    </div>
+
+    <div class="signup_container" id="signup_container">
+        <form action="" class="signup-form">
+            <h2>Signup</h2>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input placeholder="Your name here" type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="email">E-Mail</label>
+                <input placeholder="abc@xyz.com" type="email" name="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input placeholder="Cre@te_Str0ng p@$$w0rd" type="password" name="password" id="signuppassword" required>
+            </div>
+            <div class="input-group">
+                <label for="password_confirm">Password</label>
+                <input placeholder="Re-type Password" type="password" name="password_confirm" id="signuppasswordconfirm" required>
+            </div>
+            <div class="savelip">
+                <label for="signupdate">Lipshape Lock</label>
+                <div class="enable-disable" id="enable-disable">
+                    <div class="off" id="off"></div>
+                </div>
+            </div>
+            <button onclick="" type="submit">SignUp</button>
+            <button class="signupbtn" onclick="Signin()"> Already a user? Login Here </button>
+          
         </form>
     </div>
 
     <!-- Your HTML content -->
     <script>
+        function Signup(){
+            document.getElementById("login-container").style.display='None';
+            document.getElementById("signup_container").style.display='Flex';
+        }
+        function Signin(){
+            document.getElementById("login-container").style.display='Flex';
+            document.getElementById("signup_container").style.display='None';
+        }
+
+        let count=0;
+        const onoff=document.getElementById("enable-disable");
+        const off=document.getElementById("off");
+        onoff.addEventListener('click', function(){
+            if (count%2===0){
+                off.classList.remove('ontoff');
+                off.classList.add('offtoon');
+                count=count+1;
+            }
+            else{
+                off.classList.remove('offtoon');
+                off.classList.add('ontoff');
+                count=count+1;
+            }
+        })
+
         function enableImageInput() {
             document.getElementById("password").disabled = true;
             fetch('/signup')
@@ -67,10 +124,21 @@
                 .then(data => {
                     const Similarity_score = data.average_similarity;
                     if (Similarity_score>="85%"){
-                        alert("Success! Similarity score: " + Similarity_score);
+                        swal,fire({
+                            title:'Login Successful',
+                            text: 'Lip shape matched',
+                            icon: 'success',
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
                     }
                     else{
-                        alert("Login restricted!!! Similarity score: " + Similarity_score);
+                        swal,fire({
+                            title:'Login Restricted',
+                            text: 'Similarity very low, Try again',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
                     }
                     
                 })

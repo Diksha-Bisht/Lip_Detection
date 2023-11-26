@@ -5,7 +5,7 @@ import numpy as np
 
 # Initialize dlib's face detector and shape predictor
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("Model\shape_predictor_68_face_landmarks (1).dat")
+predictor = dlib.shape_predictor("Model/shape_predictor_68_face_landmarks (1).dat")
 
 # Initialize the webcam
 cap = cv2.VideoCapture(0)

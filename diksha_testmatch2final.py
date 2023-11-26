@@ -48,7 +48,7 @@ def compare_landmarks(live_landmarks, stored_landmarks):
 
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(r"/Users/diksha_bisht/Desktop/Github-Sem-!/Lip_Detection/Model/shape_predictor_68_face_landmarks (1).dat")
+predictor = dlib.shape_predictor(r"Model/shape_predictor_68_face_landmarks (1).dat")
 successful_matches_count = 0
 
 print("Press 'v' to start capturing live frames.")
@@ -92,7 +92,7 @@ while True:
 
         # Paths to pre-stored landmark files
         stored_landmarks_paths = [
-            f"/Users/diksha_bisht/Desktop/Github-Sem-!/Lip_Detection/dot/image_{i}/landmarks_{i}.txt"
+            f"dot/image_{i}/landmarks_{i}.txt"
             for i in range(1, 6)
         ]
 

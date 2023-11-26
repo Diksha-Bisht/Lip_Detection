@@ -11,22 +11,41 @@ body {
   background-color: #f4f4f4;
 }
 
-.login-container {
+.login-container,
+.signup_container {
+  position: relative;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 40%;
   height: 62%;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.login-form {
+.login-container {
+  display: flex;
+}
+
+.signup_container {
+  display: none;
+  width: 50% !important;
+  height: 80% !important;
+  padding: 5px !important;
+}
+
+.login-form,
+.signup-form {
+  position: relative;
   width: 50%;
   max-width: 60%;
   margin: 0 auto;
+}
+
+.signup-form {
+  height: 95% !important;
+  width: 60% !important;
 }
 
 h2 {
@@ -43,7 +62,8 @@ label {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
   width: 100%;
   padding: 8px;
   border-radius: 4px;
@@ -53,6 +73,7 @@ input[type="password"] {
 button {
   width: 100%;
   padding: 10px;
+  margin: 2px;
   border: none;
   border-radius: 4px;
   background-color: #007bff;
@@ -83,7 +104,8 @@ button:hover {
   justify-content: center;
   width: 10rem;
 }
-.lipcamera img{
+
+.lipcamera img {
   width: 2rem;
   height: 2rem;
   cursor: pointer;
@@ -91,6 +113,88 @@ button:hover {
 
 #password {
   padding-left: 30px;
+}
+
+.signupbtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #fff;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signupbtn:hover {
+  background-color: white;
+  color: #0c4a87;
+}
+
+.savelip {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.savelip label {
+  margin-bottom: 6px;
+  width: 78%;
+  display: flex;
+  position: relative;
+}
+
+.enable-disable {
+  cursor: pointer;
+  position: relative;
+  right: 0;
+  width: 3rem;
+  display: flex;
+  flex-direction: row;
+  background-color: gray;
+  border-radius: 10px;
+}
+
+.off {
+  width: 50%;
+  height: 100%;
+  background-color: rgb(88, 86, 86);
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+.offtoon{
+  animation: on-off 1s 1;
+  left: 50%;
+  background-color: #055ebc;
+}
+.ontooff{
+  animation: off-on 2s 1;
+  left: 0%;
+  background-color: rgb(88, 86, 86);
+}
+
+@keyframes on-off {
+  0% {
+    left: 0; /* Initial scale */
+  }
+  100% {
+     left: 50%;
+     background-color: #055ebc;
+  }
+}
+
+@keyframes off-on {
+  0% {
+    left: 50%;
+  }
+  50%{
+    left: 25%;
+  }
+  100% {
+     left: 0%;
+     background-color: rgb(88, 86, 86);
+  }
 }
 
 /* Responsive styles */

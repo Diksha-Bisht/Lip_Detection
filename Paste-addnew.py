@@ -6,7 +6,7 @@ def update():
 
     # Initialize dlib's face detector and shape predictor
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor("Model\shape_predictor_68_face_landmarks (1).dat")
+    predictor = dlib.shape_predictor("Model/shape_predictor_68_face_landmarks (1).dat")
 
     # Initialize the webcam
     cap = cv2.VideoCapture(0)
@@ -17,7 +17,6 @@ def update():
     # Flags to control capture
     capture_lip_shape = False
     image_counter = 1
-    show_lip_landmarks = False  # Flag to display lip landmarks
 
     # Function to calculate distance between two points
     def calculate_distance(point1, point2):
@@ -38,8 +37,8 @@ def update():
 
         # Define ellipse parameters
         center = (frame.shape[1] // 2, frame.shape[0] // 2)
-        major_axis = 100  # Length of the major axis
-        minor_axis = 150  # Length of the minor axis
+        major_axis = 200  # Length of the major axis
+        minor_axis = 250  # Length of the minor axis
         angle = 0  # Angle of rotation in degrees
         # Draw the ellipse on the frame
         draw_ellipse(frame, center, major_axis, minor_axis, angle)
@@ -79,8 +78,8 @@ def update():
                 # Save mean and variance to a text file
                 stats_file_path = os.path.join(folder_path, f'lips_stats_{image_counter}.txt')
                 with open(stats_file_path, 'w') as stats_file:
-                    stats_file.write(f"Mean Distance: {mean_distance}\n")
-                    stats_file.write(f"Variance in Distance: {variance_distance}\n")
+                    stats_file.write(f"{mean_distance}\n")
+                    stats_file.write(f"{variance_distance}\n")
                 
                 print(f'Lip distances stats {image_counter} saved in {folder_path}')
 

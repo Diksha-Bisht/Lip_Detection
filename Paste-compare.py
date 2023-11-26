@@ -1,4 +1,3 @@
-
 def signup():
     import cv2
     import dlib
@@ -9,8 +8,8 @@ def signup():
     def extract_stats_data(file_path):
         with open(file_path, 'r') as file:
             lines = file.readlines()
-            mean_distance = float(lines[0].split(':')[-1].strip())
-            variance_distance = float(lines[1].split(':')[-1].strip())
+            mean_distance = float(lines[0].strip())
+            variance_distance = float(lines[1].strip())
         return mean_distance, variance_distance
 
     def extract_landmarks_data(file_path):
@@ -48,10 +47,23 @@ def signup():
 
         return percentage_similarity_score
 
+    def compare_live_stats(live_distances, stored_stats):
+        # Similarity calculation between live and stored stats
+        stored_mean_distance, stored_variance_distance = stored_stats
+
+        live_mean_distance = np.mean(live_distances)
+        live_variance_distance = np.var(live_distances)
+
+        # Calculate similarity for mean and variance separately
+        mean_similarity = 100 * (1 - abs(stored_mean_distance - live_mean_distance) / stored_mean_distance)
+        variance_similarity = 100 * (1 - abs(stored_variance_distance - live_variance_distance) / stored_variance_distance)
+
+        # Average similarity of mean and variance for final stats similarity
+        stats_similarity_percentage = (mean_similarity + variance_similarity) / 2
+        return stats_similarity_percentage
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor(r"Model\shape_predictor_68_face_landmarks (1).dat")
-    successful_matches_count = 0
+    predictor = dlib.shape_predictor(r"Model/shape_predictor_68_face_landmarks (1).dat")
 
     # Function to draw an ellipse on the frame
     def draw_ellipse(frame, center, major_axis, minor_axis, angle):
@@ -67,8 +79,8 @@ def signup():
 
         # Define ellipse parameters
         center = (frame.shape[1] // 2, frame.shape[0] // 2)
-        major_axis = 100  # Length of the major axis
-        minor_axis = 150  # Length of the minor axis
+        major_axis = 200  # Length of the major axis
+        minor_axis = 250  # Length of the minor axis
         angle = 0  # Angle of rotation in degrees
         # Draw the ellipse on the frame
         draw_ellipse(frame, center, major_axis, minor_axis, angle)
@@ -95,9 +107,6 @@ def signup():
         frame_count = 0
         success_count = 0
 
-        # Lists to store the best similarity score for each frame
-        best_similarity_scores = []
-
         while frame_count < 10:  # Capture live data for 10 frames
             time.sleep(0.5)
 
@@ -107,6 +116,7 @@ def signup():
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+            # Detect faces
             faces = detector(gray)
             live_landmarks = []
 
@@ -115,12 +125,15 @@ def signup():
                 lip_points_live = [(landmarks.part(i).x, landmarks.part(i).y) for i in range(48, 68)]
                 live_landmarks.append(lip_points_live)
 
+            # Calculate distances for live stats
+            distances = [calculate_distance(p1, p2) for p1 in lip_points for p2 in lip_points if lip_points.index(p1) < lip_points.index(p2)]
+
+            # Similarity for landmarks
             # Paths to pre-stored landmark files
             stored_landmarks_paths = [
-                f"dot\image_1\landmarks_1.txt"
-                for i in range(1, 6)
+                f"dot/image_{i}/landmarks_{i}.txt"
+                for i in range(1, 14)
             ]
-
             similarity_scores = []
 
             for stored_landmarks_path in stored_landmarks_paths:
@@ -128,35 +141,43 @@ def signup():
                     print(f"Data file not found: {stored_landmarks_path}")
                     continue
 
+                # Extracting and comparing live landmarks
                 stored_landmarks_distances = extract_landmarks_data(stored_landmarks_path)
-
                 similarity_percentage = compare_landmarks(live_landmarks[0], stored_landmarks_distances)
                 similarity_scores.append(similarity_percentage)
 
+            # Similarity for Stats
+            # Paths for stored stats files
+            stored_stats_paths = [
+                f"dot/image_{i}/lips_stats_{i}.txt"
+                for i in range(1, 14)
+            ]
+            best_stats_similarity = 0
+
+            for stored_stats_path in stored_stats_paths:
+                if not os.path.exists(stored_stats_path):
+                    print(f"Data file not found: {stored_stats_path}")
+                    continue
+
+                # Extracting and comparing live stats
+                stored_stats = extract_stats_data(stored_stats_path)
+                stats_similarity_percentage = compare_live_stats(distances, stored_stats)
+                best_stats_similarity = max(best_stats_similarity, stats_similarity_percentage)
+
             if similarity_scores:
                 best_similarity = max(similarity_scores)
-                best_similarity_scores.append(best_similarity)
+                print(f"Frame {frame_count + 1}: Landmarks Similarity: {best_similarity:.2f}%, Stats Similarity: {best_stats_similarity:.2f}%")
 
-                print(f"Frame {frame_count + 1}: Best Similarity Score: {best_similarity:.2f}%")
-
-                if best_similarity > 80:
+                if best_similarity > 90 and best_stats_similarity > 90:
                     success_count += 1
 
             frame_count += 1
-
-        if best_similarity_scores:
-            average_similarity = sum(best_similarity_scores) / len(best_similarity_scores)
-            print(f"Average Best Similarity across frames: {average_similarity:.2f}%")
 
         if success_count >= 8:
             print("Success")
         else:
             print("Failure")
-            
-        return jsonify(average_similarity=average_similarity)
-        cv2.destroyAllWindows()
-        break
-    
 
+        return jsonify(success_count=success_count)
 
 signup()
