@@ -1,2 +1,2 @@
-Mean Distance: 39.20515224009012
-Variance in Distance: 490.69287993662033
+Mean Distance: 23.619604542086165
+Variance in Distance: 164.83914900033037

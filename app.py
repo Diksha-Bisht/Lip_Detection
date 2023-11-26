@@ -12,6 +12,17 @@ def update():
     import dlib
     import os
     import numpy as np
+    import tkinter as tk
+
+    # Create a window to get the screen dimensions
+    root = tk.Tk()
+
+    # Get the screen width and height
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    # Destroy the window as it's not needed anymore
+    root.destroy()
 
     # Initialize dlib's face detector and shape predictor
     detector = dlib.get_frontal_face_detector()
@@ -36,7 +47,6 @@ def update():
         ellipses_axes = (major_axis, minor_axis)  # Combine major and minor axis into a tuple
         cv2.ellipse(frame, center, ellipses_axes, angle, 0, 360, (255, 0, 0), 2)
 
-
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -46,8 +56,11 @@ def update():
 
         # Define ellipse parameters
         center = (frame.shape[1] // 2, frame.shape[0] // 2)
-        major_axis = 200  # Length of the major axis
-        minor_axis = 250  # Length of the minor axis
+        major_axis_percentage = 8  # Percentage of screen width for major axis
+        minor_axis_percentage = 18  # Percentage of screen height for minor axis
+        # Convert percentages to actual dimensions
+        major_axis = int((major_axis_percentage / 100) * screen_width)
+        minor_axis = int((minor_axis_percentage / 100) * screen_height)
         angle = 0  # Angle of rotation in degrees
         # Draw the ellipse on the frame
         draw_ellipse(frame, center, major_axis, minor_axis, angle)
