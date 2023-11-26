@@ -43,7 +43,7 @@ def encrypt_file(file_path, key):
     os.remove(file_path)
 
 if __name__ == "__main__":
-    folder_location = 'Lip_Detection/dot'  # Replace with your dataset folder path
+    folder_location = 'dot'  # Replace with your dataset folder path
     password = "MySecretPassword123"
 
     generated_key = generate_aes_key(password)

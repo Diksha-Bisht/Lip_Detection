@@ -17,40 +17,38 @@ def generate_aes_key(password, salt=b'salt_123'):
     key = kdf.derive(password)
     return key
 
-def pad(data):
-    padder = padding.PKCS7(128).padder()
-    padded_data = padder.update(data)
-    padded_data += padder.finalize()
-    return padded_data
+def unpad(data):
+    unpadder = padding.PKCS7(128).unpadder()
+    unpadded_data = unpadder.update(data)
+    try:
+        return unpadded_data + unpadder.finalize()
+    except ValueError:
+        return data  # Return the data as is if there's an issue with padding
 
-def encrypt_file(file_path, key):
-    iv = b'1234567890123456'  # IV should be 16 bytes for AES
-
-    with open(file_path, 'rb') as infile:
-        data = infile.read()
-
-    padded_data = pad(data)
+def decrypt_file(encrypted_file_path, key):
+    with open(encrypted_file_path, 'rb') as infile:
+        iv = infile.read(16)  # Read the initialization vector (IV)
+        encrypted_data = infile.read()
 
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-    encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
+    decryptor = cipher.decryptor()
+    decrypted_data = decryptor.update(encrypted_data) + decryptor.finalize()
 
-    encrypted_file_path = file_path + '.enc'
-    with open(encrypted_file_path, 'wb') as outfile:
-        outfile.write(iv)
-        outfile.write(encrypted_data)
+    unpadded_data = unpad(decrypted_data)
 
-    os.remove(file_path)
+    decrypted_file_path = encrypted_file_path[:-4]  # Remove the .enc extension
+    with open(decrypted_file_path, 'wb') as outfile:
+        outfile.write(unpadded_data)
 
 if __name__ == "__main__":
-    folder_location = 'Lip_Detection/dot'  # Replace with your dataset folder path
+    folder_location = 'dot'  # Replace with your dataset folder path
     password = "MySecretPassword123"
 
     generated_key = generate_aes_key(password)
     print("Generated AES Key:", generated_key.hex())
 
-    for root, dirs, files in os.walk(folder_location):
+    for root, _, files in os.walk(folder_location):
         for file in files:
-            if file.endswith('.txt'):
+            if file.endswith('.enc'):
                 file_path = os.path.join(root, file)
-                encrypt_file(file_path, generated_key)
+                decrypt_file(file_path, generated_key)
