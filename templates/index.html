@@ -27,7 +27,7 @@
                     </i>
                 </div>
             </div>
-            <button onclick="" type="submit">SignUp</button>
+            <button onclick="" type="submit">Login</button>
             <button class="signupbtn" onclick="Signup()"> New? SignUp Here </button>
         </form>
     </div>
@@ -57,7 +57,7 @@
                     <div class="off" id="off"></div>
                 </div>
             </div>
-            <button onclick="" type="submit">SignUp</button>
+            <button onclick="saveuser()" type="submit" >SignUp</button>
             <button class="signupbtn" onclick="Signin()"> Already a user? Login Here </button>
           
         </form>
@@ -65,6 +65,15 @@
 
     <!-- Your HTML content -->
     <script>
+        function saveuser(){
+            var savelip=document.getElementById('off');
+            if (savelip.classList.contains("offtoon")){
+                signupdate()
+            }
+            else{
+                alert("Bye")
+            }
+        }
         function Signup(){
             document.getElementById("login-container").style.display='None';
             document.getElementById("signup_container").style.display='Flex';
@@ -92,8 +101,8 @@
 
         function enableImageInput() {
             document.getElementById("password").disabled = true;
-            fetch('/signup')
-                .then(response => {
+            fetch('/login')
+            .then(response => {
                     if (response.ok) {
                         return response.json(); // Fixed: added parenthesis here
                     }
@@ -101,20 +110,32 @@
                 })
                 .then(data => {
                     const Similarity_score = data.average_similarity;
-                    if (Similarity_score>=85){
-                        alert("Success! Similarity score: " + Similarity_score);
+                    if (Similarity_score>="85%"){
+                        swal,fire({
+                            title:'Login Successful',
+                            text: 'Lip shape matched',
+                            icon: 'success',
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
                     }
                     else{
-                        alert("Login restricted!!! Similarity score: " + Similarity_score);
+                        swal,fire({
+                            title:'Login Restricted',
+                            text: 'Similarity very low, Try again',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
                     }
-                })  
+                    
+                })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
         }
 
         function signupdate() {
-            fetch('/signup')
+            fetch('/update')
                 .then(response => {
                     if (response.ok) {
                         return response.json(); // Fixed: added parenthesis here

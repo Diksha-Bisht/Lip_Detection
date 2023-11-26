@@ -106,9 +106,9 @@ def update():
     cv2.destroyAllWindows()
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 
-def signup():
+def login():
     import cv2
     import dlib
     import numpy as np
